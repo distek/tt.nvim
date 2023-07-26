@@ -14,6 +14,8 @@ M.config = {
 
 	height = nil,
 
+	fixed_height = nil,
+	fixed_width = nil,
 	pre_cb = nil,
 	post_cb = nil,
 }
@@ -29,6 +31,9 @@ local defaultConfig = {
 		tabs = false,
 		list = true,
 	},
+
+	fixed_height = false,
+	fixed_width = true,
 	height = 15,
 }
 
