@@ -1,7 +1,7 @@
 local config = require("tt.config")
+local util = require("tt.util")
 local M = {}
 
--- This will be set to the current window
 M.window = nil
 
 M.lastHeight = config.config.height
@@ -15,24 +15,8 @@ local freshTerm = {
 	-- winid = nil,
 }
 
-TerminalNS = vim.api.nvim_create_namespace("customTerminal")
-TerminalListNS = vim.api.nvim_create_namespace("customTerminalList")
-
-local function setCurrentIdx()
-	if M.window == nil or not vim.api.nvim_win_is_valid(M.window) then
-		return
-	end
-
-	M.TermListIdx = -1
-
-	local buf = vim.api.nvim_win_get_buf(M.window)
-	for i, v in ipairs(M.TermList) do
-		if v.buf == buf then
-			M.TermListIdx = i
-			return
-		end
-	end
-end
+M.terminalNS = vim.api.nvim_create_namespace("customTerminal")
+vim.api.nvim_set_hl(M.terminalNS, "TermNormal", { link = "Normal" })
 
 local function create(name, command)
 	local newTerm = vim.deepcopy(freshTerm)
@@ -63,7 +47,6 @@ local function create(name, command)
 	return newTerm
 end
 
--- Append new terminal to list and open it
 function M:NewTerminal(name, command)
 	name = name == nil and "" or name
 	command = command == nil and "" or command
@@ -72,6 +55,10 @@ function M:NewTerminal(name, command)
 end
 
 function M:Open(term)
+	if type(term) == "string" and term == "last" then
+		term = M.TermList[M.TermListIdx]
+	end
+
 	if config.config.pre_cb ~= nil then
 		config.config.pre_cb(term)
 	end
@@ -81,9 +68,14 @@ function M:Open(term)
 	end
 
 	if M.window ~= nil then
-		vim.api.nvim_win_set_buf(M.window, term.buf)
-		require("tt.termlist"):UpdateTermList()
-		return
+		if vim.api.nvim_win_is_valid(M.window) then
+			vim.api.nvim_win_set_buf(M.window, term.buf)
+
+			util:setCurrentIdx()
+
+			require("tt.termlist"):UpdateTermList()
+			return
+		end
 	end
 
 	vim.cmd(":botright split")
@@ -92,15 +84,17 @@ function M:Open(term)
 
 	vim.api.nvim_win_set_buf(M.window, term.buf)
 
-	setCurrentIdx()
+	vim.api.nvim_set_hl(M.terminalNS, "TermNormal", { link = "Normal" })
 
-	require("tt.termlist"):UpdateTermList()
+	util:setCurrentIdx()
 
 	vim.api.nvim_win_set_height(M.window, M.lastHeight ~= nil and M.lastHeight or config.config.height)
 
-	if config.config.post_cb then
+	if config.config.post_cb ~= nil then
 		config.config.post_cb(M.window, term)
 	end
+
+	require("tt.termlist"):UpdateTermList()
 end
 
 function M:Close()
@@ -133,13 +127,13 @@ function M:Delete(term)
 
 			vim.api.nvim_buf_delete(b.buf, { force = true, unload = true })
 
-			setCurrentIdx()
-
 			if #M.TermList > 0 then
 				M:FocusNext()
 			else
 				M:Close()
 			end
+
+			util:setCurrentIdx()
 
 			require("tt.termlist"):UpdateTermList()
 
@@ -149,7 +143,7 @@ function M:Delete(term)
 end
 
 function M:FocusNext()
-	setCurrentIdx()
+	util:setCurrentIdx()
 
 	if #M.TermList > M.TermListIdx then
 		M.TermListIdx = M.TermListIdx + 1
@@ -163,7 +157,7 @@ function M:FocusNext()
 end
 
 function M:FocusPrevious()
-	setCurrentIdx()
+	util:setCurrentIdx()
 
 	if M.TermListIdx > 1 then
 		M.TermListIdx = M.TermListIdx - 1

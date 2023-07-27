@@ -5,13 +5,14 @@ local M = {}
 M.window = nil
 M.bufid = nil
 
+M.terminalListNS = vim.api.nvim_create_namespace("customTerminalList")
+vim.api.nvim_set_hl(M.terminalListNS, "TermListNormal", { link = "Normal" })
+
 local function getBufNames()
 	local terminal = require("tt.terminal")
 	local ret = {}
 
 	local i = 1
-	local hlLine = terminal.TermListIdx
-
 	for _, v in ipairs(terminal.TermList) do
 		if vim.api.nvim_buf_is_valid(v.buf) then
 			ret[i] = string.format(" %2d %s ", i, v.name)
@@ -26,26 +27,15 @@ local function getBufNames()
 		end
 	end
 
-	return ret, hlLine
+	return ret
 end
-
--- local function updateBufs()
--- 	local bufs, hlLine = getBufNames()
-
--- 	if M.window ~= nil then
--- 		if vim.api.nvim_win_is_valid(M.window) then
--- 			vim.api.nvim_win_set_width(M.window, config.config.termlist.width)
--- 			vim.api.nvim_win_set_hl_ns(M.window, TerminalListNS)
--- 		end
--- 	end
--- end
 
 local function refreshTermList()
 	local terminal = require("tt.terminal")
 
 	if M.bufid ~= nil and vim.api.nvim_buf_is_valid(M.bufid) then
 		-- only checking if it's valid so we can delete it
-		vim.api.nvim_buf_delete(M.bufid, { force = true, unload = false })
+		vim.api.nvim_buf_delete(M.bufid, { force = true, unload = true })
 	end
 
 	if M.window == nil or not vim.api.nvim_win_is_valid(M.window) then
@@ -76,7 +66,7 @@ local function refreshTermList()
 	vim.bo[M.bufid].bufhidden = true
 	vim.bo[M.bufid].buftype = "nofile"
 
-	local bufs, hlLine = getBufNames()
+	local bufs = getBufNames()
 
 	vim.api.nvim_buf_set_option(M.bufid, "readonly", false)
 	vim.api.nvim_buf_set_option(M.bufid, "modifiable", true)
@@ -129,9 +119,16 @@ local function refreshTermList()
 		vim.api.nvim_win_set_option(M.window, "winbar", config.config.winbar_list_title or "Terminals")
 	end
 
-	vim.api.nvim_win_set_hl_ns(M.window, TerminalListNS)
+	vim.api.nvim_win_set_hl_ns(M.window, M.terminalListNS)
 
-	vim.api.nvim_buf_add_highlight(M.bufid, -1, "TermListCurrent", hlLine - 1, 0, config.config.termlist.width)
+	vim.api.nvim_buf_add_highlight(
+		M.bufid,
+		-1,
+		"TermListCurrent",
+		terminal.TermListIdx - 1,
+		0,
+		config.config.termlist.width
+	)
 
 	vim.api.nvim_win_set_width(M.window, config.config.termlist.width)
 
@@ -163,7 +160,7 @@ function M:OpenTermUnderCursor()
 	terminal:Open(terminal.TermList[row])
 
 	if not config.config.focus_on_select then
-		vim.api.nvim_set_current_win(TermListWinid)
+		vim.api.nvim_set_current_win(M.window)
 		vim.cmd("stopinsert")
 	end
 
@@ -190,7 +187,7 @@ function M:RenameTermUnderCursor()
 	vim.ui.input({
 		prompt = "New name: ",
 	}, function(input)
-		if input ~= "" then
+		if input ~= nil then
 			terminal.TermList[row].name = input
 			return
 		end

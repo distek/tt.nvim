@@ -18,6 +18,14 @@ local function bufIsIn(t, buf)
 	return false
 end
 
+function M:IsOpen()
+	if terminal.window ~= nil and vim.api.nvim_win_is_valid(terminal.window) then
+		return true
+	end
+
+	return false
+end
+
 vim.api.nvim_create_autocmd("TermClose", {
 	pattern = "*",
 	callback = function(ev)
@@ -37,12 +45,22 @@ vim.api.nvim_create_autocmd("WinResized", {
 	pattern = "*",
 	callback = function(ev)
 		if config.config.fixed_height then
-			vim.api.nvim_win_set_height(terminal.window, config.config.height)
-			vim.api.nvim_win_set_height(termlist.window, config.config.height)
+			if terminal.window ~= nil and vim.api.nvim_win_is_valid(terminal.window) then
+				vim.api.nvim_win_set_height(terminal.window, config.config.height)
+			end
+			if termlist.window ~= nil and vim.api.nvim_win_is_valid(termlist.window) then
+				vim.api.nvim_win_set_height(termlist.window, config.config.height)
+			end
 		end
 
 		if config.config.fixed_width then
-			vim.api.nvim_win_set_width(termlist.window, config.config.termlist.width)
+			if config.config.termlist.width ~= nil then
+				if termlist.window ~= nil and vim.api.nvim_win_is_valid(termlist.window) then
+					vim.api.nvim_win_set_width(termlist.window, config.config.termlist.width)
+				end
+			else
+				vim.notify("You have fixed width set with no termlist width set")
+			end
 		end
 	end,
 })
