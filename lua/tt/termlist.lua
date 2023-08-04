@@ -63,7 +63,7 @@ local function refreshTermList()
 	M.bufid = vim.api.nvim_create_buf(false, true)
 
 	vim.bo[M.bufid].filetype = "termlist"
-	vim.bo[M.bufid].bufhidden = true
+	vim.bo[M.bufid].bufhidden = "hide"
 	vim.bo[M.bufid].buftype = "nofile"
 
 	local bufs = getBufNames()
