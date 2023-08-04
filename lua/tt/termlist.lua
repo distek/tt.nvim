@@ -115,8 +115,8 @@ local function refreshTermList()
 	vim.wo[M.window].signcolumn = "no"
 	vim.wo[M.window].statuscolumn = ""
 
-	if config.config.winbar_list == nil or config.config.winbar_list == true then
-		vim.api.nvim_win_set_option(M.window, "winbar", config.config.winbar_list_title or "Terminals")
+	if config.config.winbar.list == nil or config.config.winbar.list == true then
+		vim.api.nvim_win_set_option(M.window, "winbar", config.config.winbar.list_title or "Terminals")
 	end
 
 	vim.api.nvim_win_set_hl_ns(M.window, M.terminalListNS)
