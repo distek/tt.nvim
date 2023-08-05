@@ -19,47 +19,50 @@ function M:setCurrentIdx()
 end
 
 function M:updateWinbar()
-	local terminal = require("tt.terminal")
+    local wantTabs = require("tt.config").config.winbar.tabs
+	if wantTabs ~= nil and wantTabs then
+        local terminal = require("tt.terminal")
 
-	if terminal.window == nil or not vim.api.nvim_win_is_valid(terminal.window) then
-		return
-	end
-
-	local count = #terminal.TermList
-
-	if terminal.window == nil or terminal.window < 0 then
-		return
-	end
-
-	local wb = ""
-
-	for i, term in ipairs(terminal.TermList) do
-        if not vim.api.nvim_buf_is_valid(term.buf) then
-            goto continue
+        if terminal.window == nil or not vim.api.nvim_win_is_valid(terminal.window) then
+            return
         end
-		if term.buf == terminal.TermList[terminal.TermListIdx].buf then
-			wb = wb .. "%#TabLineSel#▎"
-			wb = wb .. "%#TabLineSel# "
-		else
-			wb = wb .. "%#TabLine#▎%#TabLine# "
-		end
 
-		wb = wb .. "%" .. term.buf .. "@v:lua.require'tt'.HandleClickTab@ "
-		wb = wb .. term.name .. " %X"
-		wb = wb .. "%" .. term.buf .. "@v:lua.require'tt'.HandleClickClose@"
-		wb = wb .. " 𝝬%X"
-		if count > 1 and i ~= count then
-			wb = wb .. " %#TabLineFill# "
-		else
-			wb = wb .. " "
-		end
-		wb = wb .. "%#Normal#"
-        ::continue::
-	end
+        local count = #terminal.TermList
 
-	wb = wb .. "%#TabLineFill#"
+        if terminal.window == nil or terminal.window < 0 then
+            return
+        end
 
-	vim.wo[terminal.window].winbar = wb
+        local wb = ""
+
+        for i, term in ipairs(terminal.TermList) do
+            if not vim.api.nvim_buf_is_valid(term.buf) then
+                goto continue
+            end
+            if term.buf == terminal.TermList[terminal.TermListIdx].buf then
+                wb = wb .. "%#TabLineSel#▎"
+                wb = wb .. "%#TabLineSel# "
+            else
+                wb = wb .. "%#TabLine#▎%#TabLine# "
+            end
+
+            wb = wb .. "%" .. term.buf .. "@v:lua.require'tt'.HandleClickTab@ "
+            wb = wb .. term.name .. " %X"
+            wb = wb .. "%" .. term.buf .. "@v:lua.require'tt'.HandleClickClose@"
+            wb = wb .. " 𝝬%X"
+            if count > 1 and i ~= count then
+                wb = wb .. " %#TabLineFill# "
+            else
+                wb = wb .. " "
+            end
+            wb = wb .. "%#Normal#"
+            ::continue::
+        end
+
+        wb = wb .. "%#TabLineFill#"
+
+        vim.wo[terminal.window].winbar = wb
+    end
 end
 
 function M:termFromBuf(buf)
