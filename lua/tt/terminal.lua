@@ -57,6 +57,8 @@ end
 function M:Open(term)
 	if type(term) == "string" and term == "last" then
 		term = M.TermList[M.TermListIdx]
+	elseif type(term) == "number" then
+		term = util.termFromBuf(term)
 	end
 
 	if config.config.pre_cb ~= nil then
@@ -72,6 +74,7 @@ function M:Open(term)
 			vim.api.nvim_win_set_buf(M.window, term.buf)
 
 			util:setCurrentIdx()
+			util:updateWinbar()
 
 			require("tt.termlist"):UpdateTermList()
 			return
@@ -87,6 +90,7 @@ function M:Open(term)
 	vim.api.nvim_set_hl(M.terminalNS, "TermNormal", { link = "Normal" })
 
 	util:setCurrentIdx()
+	util:updateWinbar()
 
 	vim.api.nvim_win_set_height(M.window, M.lastHeight ~= nil and M.lastHeight or config.config.height)
 
@@ -134,6 +138,7 @@ function M:Delete(term)
 			end
 
 			util:setCurrentIdx()
+			util:updateWinbar()
 
 			require("tt.termlist"):UpdateTermList()
 
@@ -153,6 +158,7 @@ function M:FocusNext()
 
 	M:Open(M.TermList[M.TermListIdx])
 
+	util:updateWinbar()
 	require("tt.termlist"):UpdateTermList()
 end
 
@@ -167,6 +173,7 @@ function M:FocusPrevious()
 
 	M:Open(M.TermList[M.TermListIdx])
 
+	util:updateWinbar()
 	require("tt.termlist"):UpdateTermList()
 end
 

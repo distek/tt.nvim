@@ -1,6 +1,7 @@
 local config = require("tt.config")
 local terminal = require("tt.terminal")
 local termlist = require("tt.termlist")
+local util = require("tt.util")
 
 local M = {}
 
@@ -8,17 +9,7 @@ M.setup = config.setup
 M.terminal = terminal
 M.termlist = termlist
 
-local function bufIsIn(t, buf)
-	for _, v in ipairs(t) do
-		if v.buf == buf then
-			return true
-		end
-	end
-
-	return false
-end
-
-function M:IsOpen()
+function M.IsOpen()
 	if terminal.window ~= nil and vim.api.nvim_win_is_valid(terminal.window) then
 		return true
 	end
@@ -26,18 +17,47 @@ function M:IsOpen()
 	return false
 end
 
-vim.api.nvim_create_autocmd("TermClose", {
-	pattern = "*",
-	callback = function(ev)
-		if bufIsIn(terminal.TermList, ev.buf) then
-			M.terminal:Close()
+function M.HandleClickTab(minwid, clicks, btn, mods)
+	local term = util:termFromBuf(minwid)
 
-			if terminal.TermListIdx ~= 1 then
-				terminal.TermListIdx = terminal.TermListIdx - 1
+	if term ~= nil then
+		terminal:Open(term)
+	end
+end
+
+function M.HandleClickClose(minwid, clicks, btn, mods)
+	local term = util:termFromBuf(minwid)
+
+	if term ~= nil then
+		if vim.api.nvim_buf_is_valid(term.buf) then
+			if #terminal.TermList ~= 1 then
+				terminal:FocusNext()
+			else
+				terminal:Close()
 			end
 
-			M.terminal:Open(terminal.TermList[terminal.TermListIdx])
+			terminal:Delete(term)
 		end
+	end
+end
+
+vim.api.nvim_create_autocmd("TermClose", {
+	callback = function(ev)
+		-- Defer so the TermClose "finishes" before we act
+		vim.defer_fn(function()
+			local term = util:termFromBuf(ev.buf)
+			if term ~= nil then
+				if vim.api.nvim_buf_is_valid(term.buf) then
+					if #terminal.TermList ~= 1 then
+						terminal:FocusNext()
+					else
+						terminal:Close()
+					end
+
+					terminal:Delete(term)
+				end
+			end
+		end, 1)
 	end,
 })
 

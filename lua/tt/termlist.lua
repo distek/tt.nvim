@@ -35,7 +35,7 @@ local function refreshTermList()
 
 	if M.bufid ~= nil and vim.api.nvim_buf_is_valid(M.bufid) then
 		-- only checking if it's valid so we can delete it
-		vim.api.nvim_buf_delete(M.bufid, { force = true, unload = true })
+		vim.api.nvim_buf_delete(M.bufid, { force = true, unload = false })
 	end
 
 	if M.window == nil or not vim.api.nvim_win_is_valid(M.window) then
@@ -115,7 +115,7 @@ local function refreshTermList()
 	vim.wo[M.window].signcolumn = "no"
 	vim.wo[M.window].statuscolumn = ""
 
-	if config.config.winbar.list == nil or config.config.winbar.list == true then
+	if config.config.winbar.list ~= nil or config.config.winbar.list == true then
 		vim.api.nvim_win_set_option(M.window, "winbar", config.config.winbar.list_title or "Terminals")
 	end
 
