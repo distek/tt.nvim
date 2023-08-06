@@ -91,11 +91,15 @@ vim.api.nvim_create_autocmd({ "WinResized", "VimResized" }, {
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "BufWinEnter", "TermEnter" }, {
 	pattern = { "*" },
 	callback = function(ev)
-		if config.config.force_insert_on_focus ~= nil and config.config.force_insert_on_focus then
+		if config.config.terminal.force_insert_on_focus ~= nil and config.config.terminal.force_insert_on_focus then
 			if vim.bo[ev.buf].filetype == "toggleterm" then
 				vim.defer_fn(function()
 					vim.cmd("startinsert")
 				end, 1)
+			end
+
+			if vim.bo[ev.buf].filetype == "termlist" then
+				vim.api.nvim_win_set_cursor(0, { terminal.TermListIdx, 0 })
 			end
 		end
 	end,
