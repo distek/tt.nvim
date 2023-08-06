@@ -1,4 +1,5 @@
 local config = require("tt.config")
+local util = require("tt.util")
 
 local M = {}
 
@@ -144,6 +145,8 @@ local function refreshTermList()
 end
 
 function M:UpdateTermList()
+	util:updateWinbar()
+
 	if not config.config.termlist.enabled then
 		return
 	end
