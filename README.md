@@ -23,25 +23,27 @@ Via [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-	focus_on_select = true, -- bool: focus terminal on termlist select
-
-	force_insert_on_focus = true, -- bool: initially force insert mode when terminal is focused
-
 	termlist = {
-		enabled = true, -- bool: enable termlist
-		side = "right", -- string: "right" or "left": which side the termlist is on
-		width = 25, -- int: width of the termlist
-	},
-	winbar = {
-		tabs = false, -- bool: show winbar tabs above terminal (not useful if using something like edgy.nvim)
-		list = true, -- bool: show winbar above termlist
-		list_title = "Terminals" -- string: the title to show above the termlist
+		enabled = true,
+		width = 25,
+		name = "Terminals",
+		winhighlight = "Normal:Normal", -- See :h winhighlight - You can change winbar colors as well
+                                        -- (e.g. "Normal:Normal,WinBar:MyCoolWinBarHL")
+		winbar = true, -- enable showing the winbar
+		focus_on_select = true, -- <cr> on a list item will focus that terminal, not just display it
 	},
 
-	height = 15, -- int: initial height of the toggle term and termlist
+	terminal = {
+		winhighlight = "Normal:Normal",
+		winbar = false,
+		force_insert_on_focus = true, -- do our best to ensure terminal is always in insert mode when
+                                      -- entering the terminal in whatever fashion
+	},
 
-	fixed_height = false, -- bool: retain the height of the toggle term as set above
-	fixed_width = true, -- bool: retain the width of the termlist as set above (termlist.width)
+	height = 15,
+
+	fixed_height = false,
+	fixed_width = true,
 
 	pre_cb = nil, -- function|nil: pre-hook to run prior to opening the terminal
 	post_cb = nil, -- function|nil: post-hook to run after opening the terminal
@@ -66,8 +68,8 @@ t:IsOpen() -- bool: if terminal is open or not
 t.terminal:NewTerminal(name: string, command: string) -- Open new terminal running command with name
 
 t.terminal:Open("last"|idx: int) -- Open the "last" used terminal, or terminal at index "idx"
-                                  -- Terminal's are tracked via t.terminal:TermList with
-                                  -- t.terminal:TermListIdx being the current terminal's index
+                                 -- Terminal's are tracked via t.terminal:TermList with
+                                 -- t.terminal:TermListIdx being the current terminal's index
 
 t.terminal:Toggle() -- Toggles the term
 
