@@ -6,7 +6,7 @@ A little toggleterm with a terminal listing and clickable winbar tabs
 
 ## Installation
 
-Via lazy:
+Via [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 	{
