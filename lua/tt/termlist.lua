@@ -6,9 +6,6 @@ local M = {}
 M.window = nil
 M.bufid = nil
 
-M.terminalListNS = vim.api.nvim_create_namespace("customTerminalList")
-vim.api.nvim_set_hl(M.terminalListNS, "TermListNormal", { link = "Normal" })
-
 local function getBufNames()
 	local terminal = require("tt.terminal")
 	local ret = {}

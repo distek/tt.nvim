@@ -12,11 +12,7 @@ M.TermListIdx = nil
 local freshTerm = {
 	name = nil,
 	buf = nil,
-	-- winid = nil,
 }
-
-M.terminalNS = vim.api.nvim_create_namespace("customTerminal")
-vim.api.nvim_set_hl(M.terminalNS, "TermNormal", { link = "Normal" })
 
 local function create(name, command)
 	local newTerm = vim.deepcopy(freshTerm)
