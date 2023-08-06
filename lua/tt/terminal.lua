@@ -102,7 +102,7 @@ function M:Open(term)
 end
 
 function M:Close()
-	if vim.api.nvim_win_is_valid(M.window) then
+	if M.window ~= nil and vim.api.nvim_win_is_valid(M.window) then
 		if config.config.fixed_height then
 			M.lastHeight = vim.api.nvim_win_get_height(M.window)
 		end

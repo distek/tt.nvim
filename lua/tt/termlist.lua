@@ -199,7 +199,7 @@ function M:RenameTermUnderCursor()
 end
 
 function M:Close()
-	if vim.api.nvim_win_is_valid(M.window) then
+	if M.window ~= nil and vim.api.nvim_win_is_valid(M.window) then
 		vim.api.nvim_win_hide(M.window)
 	end
 
