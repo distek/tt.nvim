@@ -13,10 +13,10 @@ Via lazy:
 		"distek/tt.nvim",
 		config = function()
 			require("tt").setup({
-                -- config
-            })
-        end
-    },
+				-- config
+			})
+		end
+	},
 ```
 
 ## Default config
@@ -35,7 +35,7 @@ Via lazy:
 	winbar = {
 		tabs = false, -- bool: show winbar tabs above terminal (not useful if using something like edgy.nvim)
 		list = true, -- bool: show winbar above termlist
-        list_title = "Terminals" -- string: the title to show above the termlist
+		list_title = "Terminals" -- string: the title to show above the termlist
 	},
 
 	height = 15, -- int: initial height of the toggle term and termlist
