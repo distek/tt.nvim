@@ -12,6 +12,8 @@ M.config = {
 		list = nil,
 	},
 
+	force_insert_on_focus = nil,
+
 	height = nil,
 
 	fixed_height = nil,
@@ -31,6 +33,8 @@ local defaultConfig = {
 		tabs = false,
 		list = true,
 	},
+
+	force_insert_on_focus = true,
 
 	fixed_height = false,
 	fixed_width = true,

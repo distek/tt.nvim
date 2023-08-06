@@ -85,4 +85,19 @@ vim.api.nvim_create_autocmd("WinResized", {
 	end,
 })
 
+-- Force insert mode when entering toggleterm
+-- I would _love_ to know how to do this better
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter", "BufWinEnter", "TermEnter" }, {
+	pattern = { "*" },
+	callback = function(ev)
+		if config.config.force_insert_on_focus ~= nil and config.config.force_insert_on_focus then
+			if vim.bo[ev.buf].filetype == "toggleterm" then
+				vim.defer_fn(function()
+					vim.cmd("startinsert")
+				end, 1)
+			end
+		end
+	end,
+})
+
 return M
