@@ -42,7 +42,7 @@ local defaultConfig = {
 }
 
 M.setup = function(config)
-	if config and config ~= {} then
+	if config ~= nil and config ~= {} then
 		M.config = vim.tbl_deep_extend("force", defaultConfig, config)
 	else
 		M.config = defaultConfig

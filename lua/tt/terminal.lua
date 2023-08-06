@@ -117,7 +117,7 @@ end
 
 function M:Toggle()
 	if M.window == nil then
-		if #M.TermList == 0 then
+		if #M.TermList ~= 0 then
 			M:Open(M.TermList[M.TermListIdx])
 		else
 			M:NewTerminal()
