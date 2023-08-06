@@ -92,11 +92,11 @@ function M:Open(term)
 
 	vim.api.nvim_win_set_height(M.window, M.lastHeight ~= nil and M.lastHeight or config.config.height)
 
+	require("tt.termlist"):UpdateTermList()
+
 	if config.config.post_cb ~= nil then
 		config.config.post_cb(M.window, term)
 	end
-
-	require("tt.termlist"):UpdateTermList()
 end
 
 function M:Close()
