@@ -1,8 +1,13 @@
 # tt.nvim
 
+A little toggleterm with a terminal listing and clickable winbar tabs
+
+![screenshot](screenshot.png)
+
 ## Installation
 
 Via lazy:
+
 ```lua
 	{
 		"distek/tt.nvim",
@@ -20,6 +25,8 @@ Via lazy:
 {
 	focus_on_select = true, -- bool: focus terminal on termlist select
 
+	force_insert_on_focus = true, -- bool: initially force insert mode when terminal is focused
+
 	termlist = {
 		enabled = true, -- bool: enable termlist
 		side = "right", -- string: "right" or "left": which side the termlist is on
@@ -31,7 +38,7 @@ Via lazy:
         list_title = "Terminals" -- string: the title to show above the termlist
 	},
 
-	height = 15, -- int: initial height of the toggle term
+	height = 15, -- int: initial height of the toggle term and termlist
 
 	fixed_height = false, -- bool: retain the height of the toggle term as set above
 	fixed_width = true, -- bool: retain the width of the termlist as set above (termlist.width)
@@ -47,6 +54,8 @@ The terminal has the filetype of `toggleterm`
 The termlist has the filetype of `termlist`
 Use the above for whatever autocmds you desire
 
+An example configuration using lazy is located in [example](example/example-init.lua)
+
 ```lua
 local t = require("tt")
 
@@ -57,14 +66,14 @@ t:IsOpen() -- bool: if terminal is open or not
 t.terminal:NewTerminal(name: string, command: string) -- Open new terminal running command with name
 
 t.terminal:Open("last"|idx: int) -- Open the "last" used terminal, or terminal at index "idx"
-                                  -- Terminal's are tracked via t.terminal:TermList with 
+                                  -- Terminal's are tracked via t.terminal:TermList with
                                   -- t.terminal:TermListIdx being the current terminal's index
 
 t.terminal:Toggle() -- Toggles the term
 
 t.terminal:Close() -- Just closes the open toggle term window
 
-t.terminal:Delete(idx: int) -- Closes the terminal at "idx". If it is the last terminal, closes the 
+t.terminal:Delete(idx: int) -- Closes the terminal at "idx". If it is the last terminal, closes the
                             -- window as well, otherwise it focuses the next terminal
 
 t.terminal:FocusNext() -- Focus the next terminal
