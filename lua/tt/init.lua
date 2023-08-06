@@ -1,4 +1,5 @@
 local config = require("tt.config")
+
 local terminal = require("tt.terminal")
 local termlist = require("tt.termlist")
 local util = require("tt.util")
@@ -61,7 +62,7 @@ vim.api.nvim_create_autocmd("TermClose", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("WinResized", {
+vim.api.nvim_create_autocmd({ "WinResized", "VimResized" }, {
 	pattern = "*",
 	callback = function(ev)
 		if config.config.fixed_height then
