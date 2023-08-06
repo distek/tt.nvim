@@ -19,7 +19,7 @@ function M:setCurrentIdx()
 end
 
 function M:updateWinbar()
-    local wantTabs = require("tt.config").config.winbar.tabs
+    local wantTabs = require("tt.config").config.terminal.winbar
 	if wantTabs ~= nil and wantTabs then
         local terminal = require("tt.terminal")
 
@@ -76,5 +76,18 @@ function M:termFromBuf(buf)
 	return nil
 end
 
+function M:setWinhl(win, hlStr)
+	-- Totally jacked this from folke (edgy.nvim) {
+	local whl = vim.split(vim.wo[win].winhighlight, ",")
+
+	vim.list_extend(whl, vim.split(hlStr, ","))
+
+	whl = vim.tbl_filter(function(hl)
+		return hl ~= ""
+	end, whl)
+
+	vim.wo[win].winhighlight = table.concat(whl, ",")
+	-- }
+end
 
 return M

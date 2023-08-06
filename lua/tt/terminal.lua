@@ -68,6 +68,7 @@ function M:Open(term)
 	if M.window ~= nil then
 		if vim.api.nvim_win_is_valid(M.window) then
 			vim.api.nvim_win_set_buf(M.window, term.buf)
+			util:setWinhl(M.window, config.config.terminal.winhighlight)
 
 			util:setCurrentIdx()
 
@@ -82,7 +83,7 @@ function M:Open(term)
 
 	vim.api.nvim_win_set_buf(M.window, term.buf)
 
-	vim.api.nvim_set_hl(M.terminalNS, "TermNormal", { link = "Normal" })
+	util:setWinhl(M.window, config.config.terminal.winhighlight)
 
 	util:setCurrentIdx()
 

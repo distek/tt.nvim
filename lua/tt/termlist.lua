@@ -113,12 +113,6 @@ local function refreshTermList()
 	vim.wo[M.window].signcolumn = "no"
 	vim.wo[M.window].statuscolumn = ""
 
-	if config.config.winbar.list ~= nil or config.config.winbar.list == true then
-		vim.api.nvim_win_set_option(M.window, "winbar", config.config.winbar.list_title or "Terminals")
-	end
-
-	vim.api.nvim_win_set_hl_ns(M.window, M.terminalListNS)
-
 	vim.api.nvim_buf_add_highlight(
 		M.bufid,
 		-1,
@@ -139,6 +133,12 @@ local function refreshTermList()
 	vim.api.nvim_win_set_buf(M.window, M.bufid)
 
 	vim.api.nvim_win_set_height(M.window, config.config.height)
+
+	if config.config.termlist.winbar == nil or config.config.termlist.winbar then
+		vim.api.nvim_win_set_option(M.window, "winbar", config.config.termlist.name)
+	end
+
+	util:setWinhl(M.window, config.config.termlist.winhighlight)
 end
 
 function M:UpdateTermList()
@@ -159,7 +159,7 @@ function M:OpenTermUnderCursor()
 
 	terminal:Open(terminal.TermList[row])
 
-	if not config.config.focus_on_select then
+	if not config.config.termlist.focus_on_select then
 		vim.api.nvim_set_current_win(M.window)
 		vim.cmd("stopinsert")
 	end

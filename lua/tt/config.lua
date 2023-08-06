@@ -1,44 +1,50 @@
 local M = {}
 
 M.config = {
-	focus_on_select = nil,
 	termlist = {
 		enabled = nil,
-		side = nil,
+		name = nil,
 		width = nil,
-	},
-	winbar = {
-		tabs = nil,
-		list = nil,
+		winhighlight = nil,
+		winbar = nil,
+		focus_on_select = nil,
 	},
 
-	force_insert_on_focus = nil,
+	terminal = {
+		winhighlight = nil,
+		winbar = nil,
+		force_insert_on_focus = nil,
+	},
 
 	height = nil,
 
 	fixed_height = nil,
 	fixed_width = nil,
+
 	pre_cb = nil,
 	post_cb = nil,
 }
 
 local defaultConfig = {
-	focus_on_select = true,
 	termlist = {
 		enabled = true,
-		side = "right",
+		name = "Terminals",
 		width = 25,
-	},
-	winbar = {
-		tabs = false,
-		list = true,
+		winhighlight = "Normal:Normal",
+		winbar = true,
+		focus_on_select = true,
 	},
 
-	force_insert_on_focus = true,
+	terminal = {
+		winhighlight = "Normal:Normal",
+		winbar = false,
+		force_insert_on_focus = true,
+	},
+
+	height = 15,
 
 	fixed_height = false,
 	fixed_width = true,
-	height = 15,
 }
 
 M.setup = function(config)
