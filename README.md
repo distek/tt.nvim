@@ -9,44 +9,44 @@ A little toggleterm with a terminal listing and clickable winbar tabs
 Via [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
-	{
-		"distek/tt.nvim",
-		config = function()
-			require("tt").setup({
-				-- config
-			})
-		end
-	},
+    {
+        "distek/tt.nvim",
+        config = function()
+            require("tt").setup({
+                -- config
+            })
+        end
+    },
 ```
 
 ## Default config
 
 ```lua
 {
-	termlist = {
-		enabled = true,
-		width = 25,
-		name = "Terminals",
-		winhighlight = "Normal:Normal", -- See :h winhighlight - You can change winbar colors as well
+    termlist = {
+        enabled = true,
+        width = 25,
+        name = "Terminals",
+        winhighlight = "Normal:Normal", -- See :h winhighlight - You can change winbar colors as well
                                         -- (e.g. "Normal:Normal,WinBar:MyCoolWinBarHL")
-		winbar = true, -- enable showing the winbar
-		focus_on_select = true, -- <cr> on a list item will focus that terminal, not just display it
-	},
+        winbar = true, -- enable showing the winbar
+        focus_on_select = true, -- <cr> on a list item will focus that terminal, not just display it
+    },
 
-	terminal = {
-		winhighlight = "Normal:Normal",
-		winbar = false,
-		force_insert_on_focus = true, -- do our best to ensure terminal is always in insert mode when
+    terminal = {
+        winhighlight = "Normal:Normal",
+        winbar = false,
+        force_insert_on_focus = true, -- do our best to ensure terminal is always in insert mode when
                                       -- entering the terminal in whatever fashion
-	},
+    },
 
-	height = 15,
+    height = 15,
 
-	fixed_height = false,
-	fixed_width = true,
+    fixed_height = false,
+    fixed_width = true,
 
-	pre_cb = nil, -- function|nil: pre-hook to run prior to opening the terminal
-	post_cb = nil, -- function|nil: post-hook to run after opening the terminal
+    pre_cb = nil, -- function|nil: pre-hook to run prior to opening the terminal
+    post_cb = nil, -- function|nil: post-hook to run after opening the terminal
 }
 ```
 
